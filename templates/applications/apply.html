@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel max-w-2xl">
+    <h1>Apply for {{ internship.title }}</h1>
+    <form method="post" class="form-grid">{% csrf_token %}{{ form.as_p }}<button class="btn-primary">Submit Application</button></form>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header"><div><h1>Applications</h1><p>Monitor internship application progress.</p></div></div>
+<section class="panel">
+    <table class="data-table">
+        <thead><tr><th>Student</th><th>Internship</th><th>Employer</th><th>Status</th><th>Applied</th><th></th></tr></thead>
+        <tbody>{% for application in applications %}
+            <tr>
+                <td>{{ application.student.user.get_full_name|default:application.student.user.username }}</td>
+                <td>{{ application.internship.title }}</td>
+                <td>{{ application.internship.employer.company_name }}</td>
+                <td><span class="badge">{{ application.get_status_display }}</span></td>
+                <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                <td>{% if user.userprofile.role != 'student' %}<a class="text-teal-700" href="{% url 'update_application' application.id %}">Update</a>{% endif %}</td>
+            </tr>
+        {% empty %}<tr><td colspan="6">No applications found.</td></tr>{% endfor %}</tbody>
+    </table>
+</section>
+{% endblock %}

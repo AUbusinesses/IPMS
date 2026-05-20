@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Register | IIPMS{% endblock %}
+{% block content %}
+<section class="auth-shell register-shell">
+    <div class="auth-hero">
+        <span class="auth-kicker">Join the IIPMS network</span>
+        <h1>Create your internship placement account</h1>
+        <p>Register as a student, employer, placement officer, or academic supervisor. Employer and staff accounts can be approved by the placement office.</p>
+        <div class="auth-highlights">
+            <span>Secure access</span>
+            <span>Role-based portals</span>
+            <span>Professional records</span>
+        </div>
+    </div>
+    <div class="auth-card register-card">
+        <div class="auth-card-header">
+            <span class="auth-logo">IIPMS</span>
+            <h2>Create account</h2>
+            <p>Enter your details to access the internship placement system.</p>
+        </div>
+        <form method="post" class="auth-form register-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn-primary w-full">Register</button>
+        </form>
+        <div class="auth-links single">
+            <a href="{% url 'login' %}">Already have an account? Login</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

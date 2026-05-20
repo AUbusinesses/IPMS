@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div><h1>Employer Dashboard</h1><p>Manage internship listings and applicants.</p></div>
+    <a class="btn-primary" href="{% url 'internship_create' %}">New Internship</a>
+</div>
+<div class="grid gap-4 md:grid-cols-3">
+    <div class="stat-card"><span>Listings</span><strong>{{ internships.count }}</strong></div>
+    <div class="stat-card"><span>Applicants</span><strong>{{ applications.count }}</strong></div>
+    <div class="stat-card"><span>Verified</span><strong>{{ employer.is_verified|yesno:"Yes,No" }}</strong></div>
+</div>
+<section class="panel mt-6">
+    <h2>Your Internships</h2>
+    <table class="data-table">
+        <thead><tr><th>Title</th><th>Status</th><th>Deadline</th><th></th></tr></thead>
+        <tbody>{% for internship in internships %}
+            <tr><td>{{ internship.title }}</td><td><span class="badge">{{ internship.get_status_display }}</span></td><td>{{ internship.application_deadline }}</td><td><a class="text-teal-700" href="{% url 'internship_edit' internship.id %}">Edit</a></td></tr>
+        {% empty %}<tr><td colspan="4">No internships created.</td></tr>{% endfor %}</tbody>
+    </table>
+</section>
+<section class="panel mt-6">
+    <h2>Applicants</h2>
+    <table class="data-table">
+        <thead><tr><th>Student</th><th>Internship</th><th>Status</th><th></th></tr></thead>
+        <tbody>{% for application in applications %}
+            <tr><td>{{ application.student.user.get_full_name }}</td><td>{{ application.internship.title }}</td><td>{{ application.get_status_display }}</td><td><a class="text-teal-700" href="{% url 'update_application' application.id %}">Manage</a></td></tr>
+        {% empty %}<tr><td colspan="4">No applicants yet.</td></tr>{% endfor %}</tbody>
+    </table>
+</section>
+{% endblock %}

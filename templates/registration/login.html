@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Login | IIPMS{% endblock %}
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-hero">
+        
+        <h1>Intelligent Internship Placement Management System</h1>
+        <p>Coordinate students, employers, supervisors, and placement officers through one professional internship workflow.</p>
+        <div class="auth-highlights">
+            <span>Smart matching</span>
+            <span>Placement analytics</span>
+            <span>Supervisor tracking</span>
+        </div>
+    </div>
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <span class="auth-logo">IIPMS</span>
+            <h2>Welcome back</h2>
+            <p>Sign in to continue to your role-based dashboard.</p>
+        </div>
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn-primary w-full">Login</button>
+        </form>
+        <div class="auth-links">
+            <a href="{% url 'register' %}">Create account</a>
+            <a href="{% url 'password_reset' %}">Forgot password?</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

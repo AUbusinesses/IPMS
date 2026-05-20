@@ -1,0 +1,2 @@
+{% extends "base.html" %}
+{% block content %}<div class="panel max-w-3xl"><h1>Company Profile</h1><form method="post" class="form-grid">{% csrf_token %}{{ form.as_p }}<button class="btn-primary">Save Company</button></form></div>{% endblock %}

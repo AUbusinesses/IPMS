@@ -1,0 +1,57 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}IIPMS{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="app-body bg-slate-50 text-slate-900">
+    <div class="min-h-screen md:flex">
+        {% if user.is_authenticated %}
+        <aside class="app-sidebar bg-white border-r border-slate-200 md:w-72">
+            <div class="p-5 border-b border-slate-200">
+                <a href="{% url 'dashboard' %}" class="brand-mark">IIPMS</a>
+                <p class="mt-1 text-sm text-slate-500">{{ user.get_full_name|default:user.username }}</p>
+            </div>
+            <nav class="p-3 space-y-1">
+                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="nav-link" href="{% url 'internship_list' %}">Internships</a>
+                <a class="nav-link" href="{% url 'applications_list' %}">Applications</a>
+                <a class="nav-link" href="{% url 'notifications_list' %}">Notifications ({{ unread_notification_count }})</a>
+                {% if user.userprofile.role == 'student' %}
+                    <a class="nav-link" href="{% url 'student_profile' %}">Student Profile</a>
+                    <a class="nav-link" href="{% url 'recommendations' %}">Recommendations</a>
+                    <a class="nav-link" href="{% url 'weekly_log_create' %}">Weekly Log</a>
+                    <a class="nav-link" href="{% url 'timesheet_create' %}">Timesheet</a>
+                {% elif user.userprofile.role == 'employer' %}
+                    <a class="nav-link" href="{% url 'employer_profile' %}">Company Profile</a>
+                    <a class="nav-link" href="{% url 'internship_create' %}">Create Internship</a>
+                {% elif user.userprofile.role == 'supervisor' %}
+                    <a class="nav-link" href="{% url 'evaluation_create' %}">Submit Evaluation</a>
+                {% else %}
+                    <a class="nav-link" href="{% url 'reports_dashboard' %}">Reports</a>
+                    <a class="nav-link" href="{% url 'export_csv' %}">Export CSV</a>
+                    <a class="nav-link" href="{% url 'export_pdf' %}">Export PDF</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout' %}" class="pt-4">
+                    {% csrf_token %}
+                    <button class="w-full text-left nav-link text-red-700">Logout</button>
+                </form>
+            </nav>
+        </aside>
+        {% endif %}
+        <main class="flex-1">
+            <div class="mx-auto max-w-7xl p-5 md:p-8">
+                {% for message in messages %}
+                    <div class="mb-4 rounded border border-teal-200 bg-teal-50 p-3 text-sm text-teal-900">{{ message }}</div>
+                {% endfor %}
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

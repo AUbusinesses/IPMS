@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="panel">
+    <div class="flex flex-col justify-between gap-4 md:flex-row">
+        <div>
+            <h1>{{ internship.title }}</h1>
+            <p class="text-slate-600">{{ internship.employer.company_name }} - {{ internship.location }}</p>
+        </div>
+        <span class="badge self-start">{{ internship.get_status_display }}</span>
+    </div>
+    <p class="mt-5">{{ internship.description }}</p>
+    <dl class="mt-5 grid gap-4 md:grid-cols-4">
+        <div><dt>Domain</dt><dd>{{ internship.domain }}</dd></div>
+        <div><dt>Duration</dt><dd>{{ internship.duration_weeks }} weeks</dd></div>
+        <div><dt>Stipend</dt><dd>${{ internship.stipend }}</dd></div>
+        <div><dt>Deadline</dt><dd>{{ internship.application_deadline }}</dd></div>
+    </dl>
+    <div class="mt-4 flex flex-wrap gap-2">{% for skill in internship.required_skills.all %}<span class="badge">{{ skill.name }}</span>{% endfor %}</div>
+    {% if user.userprofile.role == 'student' and internship.status == 'approved' %}
+        <a class="btn-primary mt-6 inline-block" href="{% url 'apply_to_internship' internship.id %}">Apply Now</a>
+    {% endif %}
+</article>
+{% endblock %}

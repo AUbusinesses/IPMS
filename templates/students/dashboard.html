@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard | IIPMS{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Student Dashboard</h1>
+        <p>Track applications, recommendations, logs, and placement progress.</p>
+    </div>
+    <a class="btn-primary" href="{% url 'internship_list' %}">Find Internships</a>
+</div>
+<div class="grid gap-4 md:grid-cols-3">
+    <div class="stat-card"><span>Applications</span><strong>{{ applications.count }}</strong></div>
+    <div class="stat-card"><span>GPA/WAM</span><strong>{{ student.gpa_wam|default:"-" }}</strong></div>
+    <div class="stat-card"><span>Preferred Location</span><strong>{{ student.preferred_location|default:"Open" }}</strong></div>
+</div>
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <section class="panel">
+        <h2>Recommended Internships</h2>
+        <div class="divide-y divide-slate-200">
+            {% for match in recommendations %}
+            <div class="py-3">
+                <a class="font-semibold text-teal-700" href="{% url 'internship_detail' match.internship.id %}">{{ match.internship.title }}</a>
+                <p class="text-sm text-slate-600">{{ match.score }}% match - {{ match.explanation }}</p>
+            </div>
+            {% empty %}<p class="text-sm text-slate-500">Complete your profile to improve recommendations.</p>{% endfor %}
+        </div>
+    </section>
+    <section class="panel">
+        <h2>Application Status</h2>
+        <table class="data-table">
+            <thead><tr><th>Internship</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for application in applications %}
+                <tr><td>{{ application.internship.title }}</td><td><span class="badge">{{ application.get_status_display }}</span></td></tr>
+            {% empty %}<tr><td colspan="2">No applications yet.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+{% endblock %}

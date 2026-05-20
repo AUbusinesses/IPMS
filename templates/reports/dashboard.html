@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div><h1>Placement Officer Dashboard</h1><p>Approvals, analytics, reporting, and placement monitoring.</p></div>
+    <div class="flex gap-2"><a class="btn-secondary" href="{% url 'export_csv' %}">CSV</a><a class="btn-primary" href="{% url 'export_pdf' %}">PDF</a></div>
+</div>
+<div class="grid gap-4 md:grid-cols-4">
+    <div class="stat-card"><span>Placement Rate</span><strong>{{ stats.placement_rate }}%</strong></div>
+    <div class="stat-card"><span>Completion Rate</span><strong>{{ stats.completion_rate }}%</strong></div>
+    <div class="stat-card"><span>Applications</span><strong>{{ stats.applications }}</strong></div>
+    <div class="stat-card"><span>Employers</span><strong>{{ stats.employers }}</strong></div>
+</div>
+<section class="panel mt-6">
+    <h2>Application Statistics</h2>
+    <canvas id="statusChart" height="90"></canvas>
+</section>
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <section class="panel">
+        <h2>Pending Employer Verification</h2>
+        <table class="data-table"><tbody>{% for employer in pending_employers %}
+            <tr><td>{{ employer.company_name }}</td><td>{{ employer.user.email }}</td><td><a class="text-teal-700" href="{% url 'approve_employer' employer.id %}">Approve</a></td></tr>
+        {% empty %}<tr><td>No pending employers.</td></tr>{% endfor %}</tbody></table>
+    </section>
+    <section class="panel">
+        <h2>Pending Internship Approvals</h2>
+        <table class="data-table"><tbody>{% for internship in pending_internships %}
+            <tr><td>{{ internship.title }}</td><td>{{ internship.employer.company_name }}</td><td><a class="text-teal-700" href="{% url 'approve_internship' internship.id %}">Approve</a></td></tr>
+        {% empty %}<tr><td>No pending internships.</td></tr>{% endfor %}</tbody></table>
+    </section>
+</div>
+<section class="panel mt-6">
+    <h2>Students</h2>
+    <table class="data-table"><thead><tr><th>Name</th><th>Course</th><th>GPA/WAM</th><th>Supervisor</th></tr></thead><tbody>{% for student in students %}
+        <tr><td>{{ student.user.get_full_name|default:student.user.username }}</td><td>{{ student.course }}</td><td>{{ student.gpa_wam|default:"-" }}</td><td>{{ student.assigned_supervisor|default:"-" }}</td></tr>
+    {% endfor %}</tbody></table>
+</section>
+<script>
+const statusData = {{ status_counts|safe }};
+new Chart(document.getElementById('statusChart'), {
+    type: 'bar',
+    data: { labels: statusData.map(x => x.status), datasets: [{ label: 'Applications', data: statusData.map(x => x.total), backgroundColor: '#0f766e' }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+});
+</script>
+{% endblock %}
