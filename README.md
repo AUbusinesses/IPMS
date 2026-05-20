@@ -1,5 +1,5 @@
 # Intelligent Internship Placement Management System (IIPMS)
-
+# 
 IIPMS is a Django and PostgreSQL capstone application for managing internship listings, applications, employer workflows, placement officer monitoring, academic supervisor evaluation, notifications, reporting, and rule-based internship recommendations.
 
 ## Features
