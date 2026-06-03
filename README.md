@@ -83,31 +83,6 @@ Run a worker when Redis is available:
 celery -A iipms worker -l info
 ```
 
-## Deployment
-
-This is a Django server application, so it cannot be hosted as a normal Netlify static site. Use a Python-capable host such as Render, Railway, Fly.io, Heroku, or a VPS, then point a custom domain to that host if needed.
-
-Typical production settings:
-
-```powershell
-DEBUG=False
-SECRET_KEY=<strong-random-secret>
-ALLOWED_HOSTS=<your-domain>,<platform-hostname>
-CSRF_TRUSTED_ORIGINS=https://<your-domain>,https://<platform-hostname>
-DATABASE_URL=<postgres-connection-url>
-```
-
-Typical build/start commands:
-
-```powershell
-pip install -r requirements.txt
-python manage.py collectstatic --noinput
-python manage.py migrate
-gunicorn iipms.wsgi:application
-```
-
-The included `Procfile` uses `gunicorn iipms.wsgi:application` for platforms that detect Heroku-style process files.
-
 
 ## Security Notes
 
